@@ -24,6 +24,7 @@ const defaultSettings = {
   locale: 'en',
   emailEnabled: false,
   newPlexLogin: true,
+  forceLocalLoginOnly: false,
 };
 
 export const SettingsContext = React.createContext<SettingsContextProps>({

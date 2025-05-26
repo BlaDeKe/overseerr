@@ -99,6 +99,7 @@ export interface MainSettings {
   hideAvailable: boolean;
   localLogin: boolean;
   newPlexLogin: boolean;
+  forceLocalLoginOnly: boolean;
   region: string;
   originalLanguage: string;
   trustProxy: boolean;
@@ -126,6 +127,7 @@ interface FullPublicSettings extends PublicSettings {
   locale: string;
   emailEnabled: boolean;
   newPlexLogin: boolean;
+  forceLocalLoginOnly: boolean;
 }
 
 export interface NotificationAgentConfig {
@@ -296,6 +298,7 @@ class Settings {
         hideAvailable: false,
         localLogin: true,
         newPlexLogin: true,
+        forceLocalLoginOnly: false,
         region: '',
         originalLanguage: '',
         trustProxy: false,
@@ -512,6 +515,7 @@ class Settings {
       locale: this.data.main.locale,
       emailEnabled: this.data.notifications.agents.email.enabled,
       newPlexLogin: this.data.main.newPlexLogin,
+      forceLocalLoginOnly: this.data.main.forceLocalLoginOnly,
     };
   }
 

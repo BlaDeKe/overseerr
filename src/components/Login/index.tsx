@@ -116,52 +116,78 @@ const Login = () => {
               </div>
             </Transition>
             <Accordion single atLeastOne>
-              {({ openIndexes, handleClick, AccordionContent }) => (
-                <>
-                  <button
-                    className={`w-full cursor-default bg-gray-800 bg-opacity-70 py-2 text-center text-sm font-bold text-gray-400 transition-colors duration-200 focus:outline-none sm:rounded-t-lg ${
-                      openIndexes.includes(0) && 'text-indigo-500'
-                    } ${
-                      settings.currentSettings.localLogin &&
-                      'hover:cursor-pointer hover:bg-gray-700'
-                    }`}
-                    onClick={() => handleClick(0)}
-                    disabled={!settings.currentSettings.localLogin}
-                  >
-                    {intl.formatMessage(messages.signinwithplex)}
-                  </button>
-                  <AccordionContent isOpen={openIndexes.includes(0)}>
-                    <div className="px-10 py-8">
-                      <PlexLoginButton
-                        isProcessing={isProcessing}
-                        onAuthToken={(authToken) => setAuthToken(authToken)}
-                      />
-                    </div>
-                  </AccordionContent>
-                  {settings.currentSettings.localLogin && (
-                    <div>
-                      <button
-                        className={`w-full cursor-default bg-gray-800 bg-opacity-70 py-2 text-center text-sm font-bold text-gray-400 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-700 focus:outline-none ${
-                          openIndexes.includes(1)
-                            ? 'text-indigo-500'
-                            : 'sm:rounded-b-lg'
-                        }`}
-                        onClick={() => handleClick(1)}
-                      >
-                        {intl.formatMessage(messages.signinwithoverseerr, {
-                          applicationTitle:
-                            settings.currentSettings.applicationTitle,
-                        })}
-                      </button>
-                      <AccordionContent isOpen={openIndexes.includes(1)}>
-                        <div className="px-10 py-8">
-                          <LocalLogin revalidate={revalidate} />
-                        </div>
-                      </AccordionContent>
-                    </div>
-                  )}
-                </>
-              )}
+              {({ openIndexes, handleClick, AccordionContent }) => {
+                const plexLoginVisible =
+                  !settings.currentSettings.forceLocalLoginOnly;
+                const localLoginIndex = plexLoginVisible ? 1 : 0;
+                let localLoginButtonClasses = `w-full cursor-default bg-gray-800 bg-opacity-70 py-2 text-center text-sm font-bold text-gray-400 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-700 focus:outline-none`;
+                if (openIndexes.includes(localLoginIndex)) {
+                  localLoginButtonClasses += ' text-indigo-500';
+                }
+                if (plexLoginVisible) {
+                  if (!openIndexes.includes(localLoginIndex)) {
+                    localLoginButtonClasses += ' sm:rounded-b-lg';
+                  } else {
+                    localLoginButtonClasses += ' ';
+                  }
+                } else {
+                  if (!openIndexes.includes(localLoginIndex)) {
+                    localLoginButtonClasses += ' sm:rounded-lg';
+                  } else {
+                    localLoginButtonClasses += ' sm:rounded-t-lg';
+                  }
+                }
+                return (
+                  <>
+                    {plexLoginVisible && (
+                      <>
+                        <button
+                          className={`w-full cursor-default bg-gray-800 bg-opacity-70 py-2 text-center text-sm font-bold text-gray-400 transition-colors duration-200 focus:outline-none sm:rounded-t-lg ${
+                            openIndexes.includes(0) && 'text-indigo-500'
+                          } ${
+                            settings.currentSettings.localLogin &&
+                            'hover:cursor-pointer hover:bg-gray-700'
+                          }`}
+                          onClick={() => handleClick(0)}
+                          disabled={!settings.currentSettings.localLogin}
+                        >
+                          {intl.formatMessage(messages.signinwithplex)}
+                        </button>
+                        <AccordionContent isOpen={openIndexes.includes(0)}>
+                          <div className="px-10 py-8">
+                            <PlexLoginButton
+                              isProcessing={isProcessing}
+                              onAuthToken={(authToken) =>
+                                setAuthToken(authToken)
+                              }
+                            />
+                          </div>
+                        </AccordionContent>
+                      </>
+                    )}
+                    {settings.currentSettings.localLogin && (
+                      <div>
+                        <button
+                          className={localLoginButtonClasses}
+                          onClick={() => handleClick(localLoginIndex)}
+                        >
+                          {intl.formatMessage(messages.signinwithoverseerr, {
+                            applicationTitle:
+                              settings.currentSettings.applicationTitle,
+                          })}
+                        </button>
+                        <AccordionContent
+                          isOpen={openIndexes.includes(localLoginIndex)}
+                        >
+                          <div className="px-10 py-8">
+                            <LocalLogin revalidate={revalidate} />
+                          </div>
+                        </AccordionContent>
+                      </div>
+                    )}
+                  </>
+                );
+              }}
             </Accordion>
           </>
         </div>

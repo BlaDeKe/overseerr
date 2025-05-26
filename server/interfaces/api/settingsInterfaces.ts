@@ -37,6 +37,7 @@ export interface PublicSettingsResponse {
   locale: string;
   emailEnabled: boolean;
   newPlexLogin: boolean;
+  forceLocalLoginOnly: boolean;
 }
 
 export interface CacheItem {
